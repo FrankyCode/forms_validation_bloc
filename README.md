@@ -1,6 +1,7 @@
-# forms_validation
+# Forms_Validation_BLoC
 
-A new Flutter project.
+This Flutter Project is created with the idea of how to implements and use BLoC Pattern.
+I will separete this repository into differents branch for easy learning how to implements BLoC
 
 ## Getting Started
 
