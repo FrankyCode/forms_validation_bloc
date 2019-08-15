@@ -3,7 +3,7 @@ import 'package:forms_validation/src/bloc/provider.dart';
 import 'package:forms_validation/src/pages/home_page.dart';
 import 'package:forms_validation/src/pages/login_page.dart';
 import 'package:forms_validation/src/pages/product_page.dart';
-import 'package:forms_validation/utils/theme.dart';
+import 'package:forms_validation/src/utils/theme.dart';
 
 void main() => runApp(MyApp());
 

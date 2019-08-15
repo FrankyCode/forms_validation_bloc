@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:forms_validation/src/model/product_model.dart';
 import 'package:forms_validation/src/providers/products_provider.dart';
-import 'package:forms_validation/utils/utils.dart' as utils;
+import 'package:forms_validation/src/utils/utils.dart' as utils;
+import 'package:image_picker/image_picker.dart';
 
 class ProductPage extends StatefulWidget {
 
@@ -16,6 +19,7 @@ class _ProductPageState extends State<ProductPage> {
 
   ProductModel produc = new ProductModel();
   bool _saving = false;
+  File photo;
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +36,11 @@ class _ProductPageState extends State<ProductPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.photo_size_select_actual),
-            onPressed: () {},
+            onPressed: _selecPhoto,
           ),
           IconButton(
             icon: Icon(Icons.camera_alt),
-            onPressed: () {},
+            onPressed: _takePhoto,
           )
         ],
       ),
@@ -47,6 +51,7 @@ class _ProductPageState extends State<ProductPage> {
             key: formKey,
             child: Column(
               children: <Widget>[
+                _showPhoto(),
                 _createName(),
                 _createPrice(),
                 _createAvailable(),
@@ -115,20 +120,20 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-  void _submit(){
+  void _submit() async{
 
-   if (!formKey.currentState.validate()){
-      return;
-   }
-
+   if (!formKey.currentState.validate()) return;
+   
    formKey.currentState.save();
-   setState(() {
-        _saving = true;
 
-   });
+   setState(() {_saving = true; });
+
+   if(photo != null){
+    produc.photoUrl = await productProvider.uploadImage(photo);
+   }
   
     if(produc.id == null){
-      productProvider.createProduct(produc);
+     productProvider.createProduct(produc);
     }else{
       productProvider.updateProduct(produc);
 
@@ -149,6 +154,50 @@ class _ProductPageState extends State<ProductPage> {
     );
       scaffoldKey.currentState.showSnackBar(snackBar);
 
+  }
+
+  Widget _showPhoto(){
+    if(produc.photoUrl != null){
+      return FadeInImage(
+        image: NetworkImage(produc.photoUrl),
+        placeholder: AssetImage('assets/img/jar-loading.gif'),
+        height: 300.0,
+        fit: BoxFit.cover,
+      );
+
+    }else{
+      return Image(
+        image: AssetImage(photo?.path ?? 'assets/img/no-image.png'),
+        height: 300.0,
+        width: 300.0,
+        fit: BoxFit.cover,
+      );
+
+    }
+  }
+
+  _selecPhoto() async{
+    _proccesImage(ImageSource.gallery);
+
+  }
+
+  _takePhoto() async{
+    _proccesImage(ImageSource.camera);
+  }
+
+  _proccesImage(ImageSource origin) async {
+    photo = await ImagePicker.pickImage(
+      source: origin
+    );
+
+    if(photo != null){
+      // Clener
+      produc.photoUrl = null;
+    }
+
+    setState(() {
+      
+    });
   }
 
 }
