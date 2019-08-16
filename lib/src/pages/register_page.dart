@@ -3,7 +3,7 @@ import 'package:forms_validation/src/bloc/provider.dart';
 import 'package:forms_validation/src/providers/user_provider.dart';
 import 'package:forms_validation/src/utils/utils.dart';
 
-class LoginPage extends StatelessWidget {
+class RegisterPage extends StatelessWidget {
 
   final userProvider = new UserProvider();
 
@@ -16,7 +16,7 @@ class LoginPage extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           _createBackground(size),
-          _loginForm(context, size, bloc),
+          _registerForm(context, size, bloc),
         ],
       ),
     );
@@ -90,13 +90,13 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _loginForm(BuildContext context, size, bloc) {
+  Widget _registerForm(BuildContext context, size, bloc) {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
           SafeArea(
             child: Container(
-              height: 170.0,
+              height: 180.0,
             ),
           ),
           Container(
@@ -114,27 +114,21 @@ class LoginPage extends StatelessWidget {
                       spreadRadius: 3.0)
                 ]),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Log In',
+                  'Create Account',
                   style: TextStyle(fontSize: 20.0),
                 ),
-                SizedBox(height: 10.0),
+                SizedBox(height: 20.0),
                 _createEmail(bloc),
-               SizedBox(height: 10.0),
+                SizedBox(height: 10.0),
                 _createPassword(bloc),
-               SizedBox(height: 30.0),
+                SizedBox(height: 10.0),
                 _createButton(bloc),
               ],
             ),
           ),
-          FlatButton(
-            child: Text('Create New Account'),
-            onPressed: () =>
-                Navigator.pushReplacementNamed(context, 'register'),
-          ),
+          FlatButton(child: Text('Did you have account?'), onPressed: ()=> Navigator.pushReplacementNamed(context, 'login'),),
           SizedBox(
             height: 100.0,
           )
@@ -197,20 +191,20 @@ class LoginPage extends StatelessWidget {
           return RaisedButton(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 30.0),
-                child: Text('Log In'),
+                child: Text('Create Acc'),
               ),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0)),
               elevation: 0.0,
               color: Colors.deepPurple,
               textColor: Colors.white,
-              onPressed: snapshot.hasData ? () => _login(bloc, context) : null);
+              onPressed: snapshot.hasData ? () => _register(bloc, context) : null);
         });
   }
 
-  _login(LoginBloc bloc, BuildContext context)async {
-   
-   Map info = await userProvider.login(bloc.email, bloc.password);
+  _register(LoginBloc bloc, BuildContext context) async{
+  
+   final info = await userProvider.newUser(bloc.email, bloc.password);
 
     if(info['ok']){
       Navigator.pushNamed(context, 'home');
@@ -218,9 +212,6 @@ class LoginPage extends StatelessWidget {
       showAlert(context,info['sms']);
     }
 
+
   }
-
-
-  
-
 }
