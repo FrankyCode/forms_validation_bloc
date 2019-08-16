@@ -1,52 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:forms_validation/src/bloc/provider.dart';
 import 'package:forms_validation/src/model/product_model.dart';
-import 'package:forms_validation/src/providers/products_provider.dart';
 
 class HomePage extends StatelessWidget {
-  final productProvider = new ProductProvider();
-
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of(context);
+    final productsBloc = Provider.productsBloc(context);
+    productsBloc.loadingProduct();
 
     return Scaffold(
       appBar: AppBar(title: Text('Home')),
-      body: _createList(),
+      body: _createList(productsBloc),
       floatingActionButton: _createButton(context),
     );
   }
 
-  Widget _createList() {
-    return FutureBuilder(
-      future: productProvider.readProducts(),
-      builder:
-          (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
-        if (snapshot.hasData) {
-          final products = snapshot.data;
-          return ListView.builder(
-            itemCount: products.length,
-            itemBuilder: (context, i) => _createItem(context, products[i]),
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
+  Widget _createList(ProductBloc productBloc) {
+    return StreamBuilder(
+        stream: productBloc.productsStream,
+        builder:
+            (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
+          if (snapshot.hasData) {
+            final products = snapshot.data;
+            return ListView.builder(
+              itemCount: products.length,
+              itemBuilder: (context, i) => _createItem(context, productBloc, products[i]),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
   }
 
-  Widget _createItem(BuildContext context, ProductModel product) {
+  Widget _createItem(BuildContext context,ProductBloc productBloc, ProductModel product) {
     return Dismissible(
         key: UniqueKey(),
         background: Container(
           color: Colors.red,
         ),
-        onDismissed: (direction) {
-          //TODO: Delete Product
-          productProvider.deletedProduct(product.id);
-        },
+        onDismissed: (direction) => productBloc.deletedProducts(product.id),
         child: Card(
           child: Column(
             children: <Widget>[

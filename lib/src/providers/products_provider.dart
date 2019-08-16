@@ -9,7 +9,8 @@ import 'package:mime_type/mime_type.dart';
 import 'package:forms_validation/src/model/product_model.dart';
 
 class ProductProvider {
-  final _url = 'https://flutter-varios-96ac0.firebaseio.com';
+  //TODO: URL for your database
+  final _url = 'PUT HERE YOUR URL DATABASE';
   final _prefs = new PreferenceUser();
 
   Future<bool> createProduct(ProductModel product) async {
@@ -18,6 +19,7 @@ class ProductProvider {
     final resp = await http.post(url, body: productModelToJson(product));
 
     final decodeData = json.decode(resp.body);
+    
 
     return true;
   }
@@ -40,6 +42,8 @@ class ProductProvider {
 
     if (decodedData == null) return [];
 
+    if(decodedData['error'] != null) return [];
+
     decodedData.forEach((id, prod) {
       final prodTemp = ProductModel.fromJson(prod);
       prodTemp.id = id;
@@ -61,7 +65,8 @@ class ProductProvider {
 
 
   Future<String> uploadImage(File img) async {
-    final url = Uri.parse('https://api.cloudinary.com/v1_1/df6gqwcvl/image/upload?upload_preset=gmnmdvbw');
+    //TODO: URL for your API service to upload photos. I used cloudinary for example
+    final url = Uri.parse('HERE API URL');
     final mimeType = mime(img.path).split('/');
 
     final imgUploadRequest = http.MultipartRequest('POST', url);

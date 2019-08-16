@@ -176,7 +176,6 @@ class RegisterPage extends StatelessWidget {
                   ),
                   hintText: '123456',
                   labelText: 'Password',
-                  counterText: snapshot.data,
                   errorText: snapshot.error),
               onChanged: bloc.changePassword,
             ),

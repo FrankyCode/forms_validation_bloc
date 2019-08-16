@@ -5,7 +5,8 @@ import 'package:http/http.dart' as http;
 
 class UserProvider{
 
-  final String _firebaseToken = 'AIzaSyA8FsQzqJDO_MXhSBnuIw-fHT6OrTUGKLk';
+  //TODO: WEB API KEY of you Firebase Project
+  final String _firebaseToken = 'PUT HERE YOUR API KEY';
   final _prefs = new PreferenceUser();
 
 
