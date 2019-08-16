@@ -4,9 +4,9 @@ import 'package:forms_validation/src/preferences_user/preferences_user.dart';
 import 'package:http/http.dart' as http;
 
 class UserProvider{
-
   //TODO: WEB API KEY of you Firebase Project
   final String _firebaseToken = 'PUT HERE YOUR API KEY';
+
   final _prefs = new PreferenceUser();
 
 
